@@ -49,12 +49,16 @@ export default class BoardPresenter {
   pointView = new WayPointView();
   boardEventsList = new ListTripEventsView();
   boardFormEditView = new FormEditView();
-  boardWayPoint = new WayPointView();
+  //boardWayPoint = new WayPointView();
 
-  constructor(boardContainerFilter, boardContainerSort, tripInfoElement) {
+  constructor(boardContainerFilter, boardContainerSort, tripInfoElement, destinationModel, offerModel, pointModel) {
     this.boardContainerFilter = boardContainerFilter;
     this.boardContainerSort = boardContainerSort;
     this.tripInfoElement = tripInfoElement;
+    this.destinationModel = destinationModel;
+    this.offerModel = offerModel;
+    this.pointModel = pointModel;
+
   }
 
   init() {
@@ -63,10 +67,14 @@ export default class BoardPresenter {
     sortsTabs.forEach(({type, id, checked, disabled}) => render(new SortView(type, id, checked, disabled), this.boardContainerSort.lastElementChild));
     render(this.mainTrip, this.tripInfoElement, 'afterbegin');
     render(this.boardEventsList, this.boardContainerSort);
-    render(new ElementOfListView(this.boardFormEditView.getTemplate()), this.boardEventsList.getElement());
-    for(let i = 0; i < 3; i++){
-      render(new ElementOfListView(this.boardWayPoint.getTemplate()), this.boardEventsList.getElement());
-    }
+    render(new ElementOfListView(this.boardFormEditView.getTemplate(this.pointModel.getPoints()[1], this.destinationModel.getById(this.pointModel.getPoints()[1].destination))), this.boardEventsList.getElement());
+    this.pointModel.getPoints().forEach((point) => {
+      const boardWayPoint = new WayPointView(point, this.offerModel.getByType(point.type), this.destinationModel.getById(point.destination));
+      render(new ElementOfListView(boardWayPoint.getTemplate()), this.boardEventsList.getElement());
+    });
+    // for(let i = 0; i < 3; i++){
+    //   render(new ElementOfListView(this.boardWayPoint.getTemplate()), this.boardEventsList.getElement());
+    // }
   }
 }
 

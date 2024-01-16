@@ -1,31 +1,28 @@
 import { createElement } from '../render.js';
+import { toEventDateFormat, toEventDateFormatContent, toUpperFirstLetter, toDateTimeFormat, getDurationMinutes, addElementsInOffersList, toDateTimeFormatContent } from '../mock.js/utils.js';
 
-function createWayPointTemplate() {
+
+function createWayPointTemplate(point, offers, destination) {
   return `
 <div class="event">
-  <time class="event__date" datetime="2019-03-18">MAR 18</time>
+  <time class="event__date" datetime=${toEventDateFormat(point.dateFrom)}>${toEventDateFormatContent(point.dateFrom)}</time>
   <div class="event__type">
-    <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+    <img class="event__type-icon" width="42" height="42" src="img/icons/${point.type}.png" alt="Event type icon">
   </div>
-  <h3 class="event__title">Taxi Amsterdam</h3>
+  <h3 class="event__title">${toUpperFirstLetter(point.type)} ${destination.name}</h3>
   <div class="event__schedule">
     <p class="event__time">
-      <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+      <time class="event__start-time" datetime="${toDateTimeFormat(point.dateFrom)}">${toDateTimeFormatContent(point.dateFrom)}</time>
       &mdash;
-      <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+      <time class="event__end-time" datetime="${point.dateTo}">${toDateTimeFormatContent(point.dateTo)}</time>
     </p>
-    <p class="event__duration">30M</p>
+    <p class="event__duration">${getDurationMinutes(point.dateFrom, point.dateTo)}M</p>
   </div>
   <p class="event__price">
-    &euro;&nbsp;<span class="event__price-value">20</span>
+    &euro;&nbsp;<span class="event__price-value">${point.price}</span>
   </p>
   <h4 class="visually-hidden">Offers:</h4>
-  <ul class="event__selected-offers">
-    <li class="event__offer">
-      <span class="event__offer-title">Order Uber</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">20</span>
-    </li>
+  <ul class="event__selected-offers">${addElementsInOffersList(offers).join('<br>')}
   </ul>
   <button class="event__favorite-btn event__favorite-btn--active" type="button">
     <span class="visually-hidden">Add to favorite</span>
@@ -41,13 +38,19 @@ function createWayPointTemplate() {
 
 export default class WayPointView {
 
+  constructor(point, offers, destination) {
+    this.point = point;
+    this.offers = offers;
+    this.destination = destination;
+  }
+
   getTemplate(){
-    return createWayPointTemplate();
+    return createWayPointTemplate(this.point, this.offers, this.destination);
   }
 
   getElement(){
     if(!this.element){
-      this.element = createElement(this.Template());
+      this.element = createElement(this.getTemplate());
     }
   }
 
