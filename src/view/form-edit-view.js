@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { TYPES } from '../mock.js/const.js';
 import { toDateEditingForm, addElementOfPictureList } from '../mock.js/utils.js';
 
@@ -81,25 +81,18 @@ function createFormEditTemplate(point, destination) {
 </form>`;
 }
 
-export default class FormEditView {
+export default class FormEditView extends AbstractView{
+  #point = null;
+  #destination = null;
 
   constructor(point, destination){
-    this.point = point;
-    this.destination = destination;
+    super();
+    this.#point = point;
+    this.#destination = destination;
   }
 
   getTemplate(point, destination) {
     return createFormEditTemplate(point, destination);
   }
 
-  getElement() {
-    if(!this.element){
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
 }

@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { toEventDateFormat, toEventDateFormatContent, toUpperFirstLetter, toDateTimeFormat, getDurationMinutes, addElementsInOffersList, toDateTimeFormatContent } from '../mock.js/utils.js';
 
 
@@ -36,25 +36,20 @@ function createWayPointTemplate(point, offers, destination) {
 </div>`;
 }
 
-export default class WayPointView {
+export default class WayPointView extends AbstractView{
+  #point = null;
+  #offers = null;
+  #destination = null;
 
   constructor(point, offers, destination) {
-    this.point = point;
-    this.offers = offers;
-    this.destination = destination;
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destination = destination;
   }
 
-  getTemplate(){
-    return createWayPointTemplate(this.point, this.offers, this.destination);
+  get template(){
+    return createWayPointTemplate(this.#point, this.#offers, this.#destination);
   }
 
-  getElement(){
-    if(!this.element){
-      this.element = createElement(this.getTemplate());
-    }
-  }
-
-  removeElement(){
-    this.element = null;
-  }
 }

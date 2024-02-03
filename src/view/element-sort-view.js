@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 
 function createSortTemplate(type, id, checked, disabled){
@@ -8,27 +8,22 @@ function createSortTemplate(type, id, checked, disabled){
 </div>`;
 }
 
-export default class SortView {
+export default class SortView extends AbstractView{
+  #type = null;
+  #id = null;
+  #checked = null;
+  #disabled = null;
 
   constructor (type, id, checked, disabled) {
-    this.type = type;
-    this.id = id;
-    this.checked = checked;
-    this.disabled = disabled;
+    super();
+    this.#type = type;
+    this.#id = id;
+    this.#checked = checked;
+    this.#disabled = disabled;
   }
 
-  getTemplate() {
-    return createSortTemplate(this.type, this.id, this.checked, this.disabled);
+  get template() {
+    return createSortTemplate(this.#type, this.#id, this.#checked, this.#disabled);
   }
 
-  getElement() {
-    if(!this.element){
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
 }
