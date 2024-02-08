@@ -84,15 +84,23 @@ function createFormEditTemplate(point, destination) {
 export default class FormEditView extends AbstractView{
   #point = null;
   #destination = null;
+  #submitForm = null;
 
-  constructor(point, destination){
+  constructor({point, destination, onSubmit}){
     super();
     this.#point = point;
     this.#destination = destination;
+    this.#submitForm = onSubmit;
+    this.element.addEventListener('submit', this.#formSubmitter);
   }
 
-  getTemplate(point, destination) {
-    return createFormEditTemplate(point, destination);
+  get template() {
+    return createFormEditTemplate(this.#point, this.#destination);
   }
+
+  #formSubmitter = (evt) => {
+    evt.preventDefault();
+    this.#submitForm(evt, this.#point);
+  };
 
 }

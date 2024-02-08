@@ -1,19 +1,19 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createElementOfListTemplate(content) {
-  return `<li class="trip-events__item">${content}</li>`;
+function createElementOfListTemplate() {
+  return '<li class="trip-events__item"></li>';
 }
 
 export default class ElementOfListView extends AbstractView{
-  #content = null;
+  //#content = null;
 
-  constructor(content) {
-    super();
-    this.#content = content;
-  }
+  // constructor(content) {
+  //   super();
+  //   this.#content = content;
+  // }
 
   get template() {
-    return createElementOfListTemplate(this.#content);
+    return createElementOfListTemplate();
   }
 
 }
