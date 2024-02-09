@@ -1,9 +1,10 @@
-//import AbstractView from '../framework/view/abstract-view.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { toEventDateFormat, toEventDateFormatContent, toUpperFirstLetter, toDateTimeFormat, getDurationMinutes, addElementsInOffersList, toDateTimeFormatContent } from '../mock.js/utils.js';
 
 
 function createWayPointTemplate(point, offers, destination) {
   return `
+  <div class="event">
   <time class="event__date" datetime=${toEventDateFormat(point.dateFrom)}>${toEventDateFormatContent(point.dateFrom)}</time>
   <div class="event__type">
     <img class="event__type-icon" width="42" height="42" src="img/icons/${point.type}.png" alt="Event type icon">
@@ -29,37 +30,49 @@ function createWayPointTemplate(point, offers, destination) {
       <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
     </svg>
   </button>
+  <button class="event__rollup-btn" type="button">
+                  <span class="visually-hidden">Open event</span>
+                </button>
+                </div>
 `;
 }
 
-function createPointElement(template) {
-  const newElement = document.createElement('div');
-  newElement.innerHTML = template;
-  return newElement.children;
-}
+// function createPointElement(template) {
+//   const newElement = document.createElement('div');
+//   newElement.innerHTML = template;
+//   return newElement.children;
+// }
 
-export default class WayPointView {
-  // #point = null;
-  // offers = null;
-  // destination = null;
-  #element = null;
+export default class WayPointView extends AbstractView{
+  #point = null;
+  #offers = null;
+  #destination = null;
+  #handleEditClick = null;
+  //#element = null;
 
-  constructor(point, offers, destination) {
-    //super();
-    this.point = point;
-    this.offers = offers;
-    this.destination = destination;
+  constructor({point, offers, destination, onEditClick}) {
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destination = destination;
+    this.#handleEditClick = onEditClick;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
   get template(){
-    return createWayPointTemplate(this.point, this.offers, this.destination);
+    return createWayPointTemplate(this.#point, this.#offers, this.#destination);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createPointElement(this.template);
-    }
-    return this.#element;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
+
+  // get element() {
+  //   if (!this.#element) {
+  //     this.#element = createPointElement(this.template);
+  //   }
+  //   return this.#element;
+  // }
 
 }
